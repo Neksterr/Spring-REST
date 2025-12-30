@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>List of Gifts</title>
+    <link rel="stylesheet" th:href="@{/css/giftStyle.css}">
+</head>
+
+<body>
+<div id="gift-container">
+    <main id="main-content">
+
+        <div class="add-container">
+            <a id="add-button" th:href="@{/createGift}">Create</a>
+        </div>
+
+        <section class="gift-section">
+            <h2>Gifts</h2>
+
+            <div class="gift-list">
+                <div class="gift-header">
+                    <span>Name</span>
+                    <span>Category</span>
+                    <span>Target Age</span>
+                    <span>Status</span>
+                    <span>Created At</span>
+                    <span>Actions</span>
+                </div>
+
+                <div class="gift-row"
+                     th:each="gift : ${giftList}"
+                     th:attr="data-id=${gift.id}">
+
+                    <!-- VIEW MODE -->
+                    <span class="name view" th:text="${gift.name}"></span>
+                    <span class="category view" th:text="${gift.category}"></span>
+                    <span class="target-age view" th:text="${gift.targetAge}"></span>
+                    <span class="status view" th:text="${gift.status}"></span>
+                    <span class="created-at view"
+                          th:text="${#temporals.format(gift.createdAt, 'dd.MM.yyyy')}"></span>
+
+                    <!-- EDIT MODE -->
+                    <input class="name edit" type="text" th:value="${gift.name}">
+                    <select class="category edit">
+                        <option th:each="c : ${T(sirma.SantaWorkshop.entity.enums.Category).values()}"
+                                th:value="${c}"
+                                th:selected="${c == gift.category}"
+                                th:text="${c}">
+                        </option>
+                    </select>
+                    <input class="target-age edit" type="number" th:value="${gift.targetAge}">
+                    <select class="status edit">
+                        <option th:each="s : ${T(sirma.SantaWorkshop.entity.enums.Status).values()}"
+                                th:value="${s}"
+                                th:selected="${s == gift.status}"
+                                th:text="${s}">
+                        </option>
+                    </select>
+                    <span class="created-at view"
+                          th:text="${#temporals.format(gift.createdAt, 'dd.MM.yyyy')}"></span>
+
+                    <!-- ACTIONS -->
+                    <div class="actions">
+
+                        <button type="button" class="edit-btn" onclick="enableEdit(this)">EDIT</button>
+
+                        <form th:action="@{/api/gifts/{id}(id=${gift.id})}"
+                              method="post"
+                              th:method="delete"
+                              style="display:inline">
+                            <button type="submit" class="delete-btn">DELETE</button>
+                        </form>
+
+                        <button type="button" class="save-btn edit"
+                                onclick="saveEdit(this)">SAVE</button>
+
+                        <button type="button" class="cancel-btn edit"
+                                onclick="cancelEdit(this)">CANCEL</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script src="/js/giftEdit.js"></script>
+</body>
+</html>
