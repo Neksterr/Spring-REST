@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Elf List</title>
+</head>
+<body>
+<div id="gift-container">
+    <main id="main-content">
+
+        <div class="add-container">
+            <a id="add-button" th:href="@{/createElf}">Create</a>
+        </div>
+
+        <section class="elf-section">
+            <h2>Elves</h2>
+
+            <div class="elf-list">
+                <div class="elf-header">
+                    <span>Name</span>
+                    <span>Skill Level</span>
+                    <span>Assigned Gifts</span>
+
+                </div>
+
+                <div class="elf-row"
+                     th:each="elf : ${elfList}"
+                     th:attr="data-id=${elf.id}">
+
+                    <!-- VIEW MODE -->
+                    <span class="name view" th:text="${elf.name}"></span>
+                    <span class="category view" th:text="${elf.skillLevel}"></span>
+                    <span class="target-age view" th:text="${elf.assaignGifts}"></span>
+                    <span class="status view" th:text="${gift.status}"></span>
+                    
+
+                    <!-- EDIT MODE -->
+                    <input class="name edit" type="text" th:value="${gift.name}">
+                    <select class="category edit">
+                        <option th:each="c : ${T(sirma.SantaWorkshop.entity.enums.GiftCategory).values()}"
+                                th:value="${c}"
+                                th:selected="${c == gift.category}"
+                                th:text="${c}">
+                        </option>
+                    </select>
+                    <input class="target-age edit" type="number" th:value="${gift.targetAge}">
+                    <select class="status edit">
+                        <option th:each="s : ${T(sirma.SantaWorkshop.entity.enums.GiftStatus).values()}"
+                                th:value="${s}"
+                                th:selected="${s == gift.status}"
+                                th:text="${s}">
+                        </option>
+                    </select>
+
+                    <!-- ACTIONS -->
+                    <div class="actions">
+
+                        <button type="button" class="edit-btn" onclick="enableEdit(this)">EDIT</button>
+
+                        <form th:action="@{/api/gifts/{id}(id=${gift.id})}"
+                              method="post"
+                              th:method="delete"
+                              style="display:inline">
+                            <button type="submit" class="delete-btn">DELETE</button>
+                        </form>
+
+                        <button type="button" class="save-btn edit"
+                                onclick="saveEdit(this)">SAVE</button>
+
+                        <button type="button" class="cancel-btn edit"
+                                onclick="cancelEdit(this)">CANCEL</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
